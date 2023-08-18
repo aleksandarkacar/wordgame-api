@@ -12,11 +12,11 @@ class WordController extends Controller
     public function verifyWord(WordRequest $request)
     {
         $validatedData = $request->validated();
+
         $word = $validatedData["word"];
         $cleanedStr = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $word));
 
         $apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/$cleanedStr";
-
         $response = Http::get($apiUrl);
 
         if (!$response->successful()) {
@@ -24,7 +24,6 @@ class WordController extends Controller
         }
 
         $checkPalindrome = palindromeChecker($cleanedStr);
-
         $uniqueLettersCount = count(array_unique(str_split($cleanedStr)));
 
         $score = $uniqueLettersCount;
