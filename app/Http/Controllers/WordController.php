@@ -20,7 +20,7 @@ class WordController extends Controller
 
         $cleanedStr = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $word));
 
-        $apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/$cleanedStr";
+        $apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/$word";
         $response = Http::get($apiUrl);
 
         if (!$response->successful()) {
