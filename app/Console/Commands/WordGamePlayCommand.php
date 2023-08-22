@@ -1,39 +1,42 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Console\Commands;
 
-use App\Http\Requests\WordRequest;
-use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\WordController;
+use Illuminate\Console\Command;
 
-use function App\Helpers\palindromeChecker;
-
-class WordController extends Controller
+class WordGamePlayCommand extends Command
 {
-    public function verifyWord(WordRequest $request)
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'wordgameplay:word {word}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Play the word game with the console command';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle(WordController $wordController)
     {
-        $validatedData = $request->validated();
+        $word = $this->argument('word');
 
-        $word = $validatedData["word"];
-        $cleanedStr = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $word));
+        $response = $wordController->verifyWord(null, $word);
 
-        $apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/$cleanedStr";
-        $response = Http::get($apiUrl);
-
-        if (!$response->successful()) {
-            return response()->json(['valid' => false]);
+        if ($response->getStatusCode() === 200) {
+            $responseData = json_decode($response->getContent(), true);
+            $this->info("Unique Letters: {$responseData['uniqueLetters']}");
+            $this->info("Palindrome Status: {$responseData['palindrome']}");
+            $this->info("Score: {$responseData['score']}");
+        } else {
+            $this->error("Error: {$response->getContent()}");
         }
-
-        $checkPalindrome = palindromeChecker($cleanedStr);
-        $uniqueLettersCount = count(array_unique(str_split($cleanedStr)));
-
-        $score = $uniqueLettersCount;
-        if ($checkPalindrome == "is a palindrome") {
-            $score += 3;
-        }
-        if ($checkPalindrome == "is almost a palindrome") {
-            $score += 2;
-        }
-
-        return response()->json(['valid' => true, 'palindrome' => $checkPalindrome, 'uniqueLetters' => $uniqueLettersCount, 'score' => $score]);
     }
 }
