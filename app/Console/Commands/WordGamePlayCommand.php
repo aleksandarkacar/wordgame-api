@@ -28,7 +28,7 @@ class WordGamePlayCommand extends Command
     {
         $word = $this->argument('word');
 
-        $response = $wordController->verifyWord(null, $word);
+        $response = $wordController->verifyWord($word);
 
         if ($response->getStatusCode() === 200) {
             $responseData = json_decode($response->getContent(), true);

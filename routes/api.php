@@ -15,4 +15,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/word', [WordController::class, 'verifyWord']);
+Route::post('/word/{word}', [WordController::class, 'verifyWord']);

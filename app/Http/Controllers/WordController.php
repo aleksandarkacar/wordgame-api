@@ -9,10 +9,13 @@ use function App\Helpers\palindromeChecker;
 
 class WordController extends Controller
 {
-    public function verifyWord(WordRequest $request = null, $word = "")
+    public function verifyWord($wordOrRequest)
     {
-        if ($request) {
-            $validatedData = $request->validated();
+        if (is_string($wordOrRequest)) {
+            $word = $wordOrRequest;
+        } else {
+            // It's an HTTP request, so retrieve the word from the request.
+            $validatedData = $wordOrRequest->validated();
             $word = $validatedData["word"];
         }
 
