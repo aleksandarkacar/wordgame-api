@@ -32,9 +32,13 @@ class WordGamePlayCommand extends Command
 
         if ($response->getStatusCode() === 200) {
             $responseData = json_decode($response->getContent(), true);
-            $this->info("Unique Letters: {$responseData['uniqueLetters']}");
-            $this->info("Palindrome Status: {$responseData['palindrome']}");
-            $this->info("Score: {$responseData['score']}");
+            if ($responseData['valid']) {
+                $this->info("Unique Letters: {$responseData['uniqueLetters']}");
+                $this->info("Palindrome Status: {$responseData['palindrome']}");
+                $this->info("Score: {$responseData['score']}");
+            } else {
+                $this->error("Error: Word is not valid");
+            }
         } else {
             $this->error("Error: {$response->getContent()}");
         }
