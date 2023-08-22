@@ -9,13 +9,11 @@ use function App\Helpers\palindromeChecker;
 
 class WordController extends Controller
 {
-    public function verifyWord(WordRequest $request = null, $word = "")
+    public function verifyWord(WordRequest $request)
     {
-        if ($request) {
-            $validatedData = $request->validated();
-            $word = $validatedData["word"];
-        }
+        $validatedData = $request->validated();
 
+        $word = $validatedData["word"];
         $cleanedStr = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $word));
 
         $apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/$cleanedStr";
