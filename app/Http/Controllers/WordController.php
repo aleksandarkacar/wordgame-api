@@ -14,7 +14,6 @@ class WordController extends Controller
         if (is_string($wordOrRequest)) {
             $word = $wordOrRequest;
         } else {
-            // It's an HTTP request, so retrieve the word from the request.
             $validatedData = $wordOrRequest->validated();
             $word = $validatedData["word"];
         }
